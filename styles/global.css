@@ -1,0 +1,25 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  color: var(--light-text);
+  font-family: "Roboto", sans-serif;
+  background-color: var(--background);
+  min-height: 100vh;
+  min-width: 100vw;
+  display: grid;
+  grid-auto-flow: column;
+  height: 100%;
+}
+
+main {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+}
