@@ -11,13 +11,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/nostr-tools/lib/nostr.bundle.js"></script>
   <script src="scripts/nostr.js" defer></script>
-  <title>PPKEstr</title>
+  <title>Profilestr</title>
 </head>
 <body>
   <main>
     <div class="headline">
-      <h1>PPKEstr</h1>
-      <p>You can view posts that PPKE posted on NOSTR protocol here.</p>
+      <h1>Profilestr</h1>
+      <p>Enter npub and see notes posted by them on #nostr protocol!</p>
+      <div class="npub-input-container">
+        <textarea id="npub-input" class="input-field" placeholder="npub..."></textarea>
+        <button id="npub-submit-input" class="input-button">Search</button>
+      </div>
     </div>
     <section id="nostr-notes-container">
       <!-- notes will be rendered dynamically from js here -->
