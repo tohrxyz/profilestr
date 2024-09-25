@@ -1,6 +1,11 @@
 # Profilestr
 Web-app that let's you see all notes from specific `npub`.
 
+🌐 [tohrxyz.github.io/profilestr](https://tohrxyz.github.io/profilestr)
+
+..or you can also directly include your `npub` in the url as a hash, this way the server doesn't see it.
+[tohrxyz.github.io/profilestr/#npub1cdusut94gaqvhtpan28lca6y8czwj4akdrw5n24stckr52wmcpuqjmnrzh](tohrxyz.github.io/profilestr/#npub1cdusut94gaqvhtpan28lca6y8czwj4akdrw5n24stckr52wmcpuqjmnrzh)
+
 ### Motivation and tech-stack
 I wanted to try to create a functioning nostr-app using nothing but plain javascript without a build process [no-build].
 
