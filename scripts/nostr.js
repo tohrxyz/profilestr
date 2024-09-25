@@ -17,15 +17,12 @@ const newNoteEvent = new CustomEvent("newNoteEvent", { detail: { message: "New e
 
 document.addEventListener('DOMContentLoaded', async () => {
   nostr = window.NostrTools
-  console.log({nostr})
-
   relay = await nostr.Relay.connect(relayUrl)
   console.log(`Connected to ${relay.url}`, {relay})
 
   const hash = window.location.hash
-  console.log(hash)
-  if (hash.startsWith("#npub")) {
-    submitNpub(hash.slice(1))
+  if (hash !== "" && hash.startsWith("#npub")) {
+    loadNpubFromHash(hash.slice(1))
   }
 
   const btn = document.getElementById("npub-submit-input")
@@ -76,21 +73,39 @@ window.addEventListener('newNoteEvent', (event) => {
   }
 })
 
-function submitNpub(npubIn) {
+function submitNpub() {
   events = []
   if (notesContainer) {
     while(notesContainer.firstChild) {
       notesContainer.removeChild(notesContainer.lastChild)
     }
   }
-  let npub;
   const input = document.getElementById("npub-input")
-  if (npubIn) {
-    npub = npubIn
-    input.textContent = npubIn
-  } else {
-    npub = input.value
+  const npub = input.value
+  const hexPubKey = nostr.nip19.decode(npub).data
+  relay.subscribe([
+    {
+      kinds: [0, 1],
+      authors: [hexPubKey],
+    }
+  ], {
+    onevent(event) {
+      events.push(event)
+      window.dispatchEvent(newNoteEvent)
+    }
+  })
+}
+
+function loadNpubFromHash(hash) {
+  events = []
+  if (notesContainer) {
+    while(notesContainer.firstChild) {
+      notesContainer.removeChild(notesContainer.lastChild)
+    }
   }
+  const input = document.getElementById("npub-input")
+  const npub = hash;
+  input.textContent = npub;
   const hexPubKey = nostr.nip19.decode(npub).data
   relay.subscribe([
     {
