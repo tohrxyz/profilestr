@@ -3,6 +3,15 @@ let relay;
 let events = [];
 let nostr;
 let notesContainer;
+let profileData = {
+  picture: "",
+  website: "",
+  lud16: "",
+  name: "",
+  about: "",
+  display_name: "",
+  nip05: "",
+}
 
 const newNoteEvent = new CustomEvent("newNoteEvent", { detail: { message: "New event!!!" }})
 
@@ -18,22 +27,50 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 window.addEventListener('newNoteEvent', (event) => {
-  console.log(event.detail.message)
   notesContainer = document.getElementById('nostr-notes-container')
-    const text = document.createElement('p');
-    const latestNote = events.pop()
-    if (latestNote.tags[1][3] === "reply") {
-      text.textContent = "RE: " + latestNote.content
-    } else {
-      text.textContent = latestNote.content
-    }
-    // text.textContent = events.pop().content
-    notesContainer.appendChild(text)
-    notesContainer.children.l
+  const latestNote = events.pop()
+  const tags = latestNote.tags
+  
+  switch (latestNote.kind) {
+    case 0:
+      const profilePicContainer = document.getElementById("profile-pic-container")
+      profileData = JSON.parse(latestNote.content)
+
+      const img = document.createElement('img')
+      img.src = profileData.picture
+      img.classList.add(["profile-pic"])
+
+      const name = document.createElement('h2')
+      name.textContent = profileData.display_name
+      const desc = document.createElement('p')
+      desc.textContent = profileData.about
+      profilePicContainer.appendChild(img)
+      const div = document.createElement('div')
+      div.classList.add(['profile-info-container'])
+      div.appendChild(name)
+      div.appendChild(desc)
+      profilePicContainer.append(div)
+      break;
+      case 1:
+        const text = document.createElement('span');
+        if (tags && tags[1] && tags[1][3] && tags[1][3] === "reply") {
+          const replyNotice = document.createElement('a')
+          const div = document.createElement('div')
+          div.classList.add(['reply-note-container'])
+          replyNotice.textContent = "reply:"
+          text.textContent = latestNote.content
+          div.appendChild(replyNotice)
+          div.appendChild(text)
+          notesContainer.appendChild(div)
+        } else {
+          text.textContent = latestNote.content
+          notesContainer.appendChild(text)
+        }
+      break;
+  }
 })
 
 function submitNpub() {
-  console.log("clicked on submit npub")
   events = []
   if (notesContainer) {
     while(notesContainer.firstChild) {
@@ -45,14 +82,12 @@ function submitNpub() {
   const hexPubKey = nostr.nip19.decode(npub).data
   relay.subscribe([
     {
-      kinds: [1],
+      kinds: [0, 1],
       authors: [hexPubKey],
     }
   ], {
     onevent(event) {
-      console.log("got event: ", event)
       events.push(event)
-      console.log(events)
       window.dispatchEvent(newNoteEvent)
     }
   })

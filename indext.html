@@ -15,17 +15,20 @@
 </head>
 <body>
   <main>
-    <div class="headline">
-      <h1>Profilestr</h1>
-      <p>Enter npub and see notes posted by them on #nostr protocol!</p>
-      <div class="npub-input-container">
-        <textarea id="npub-input" class="input-field" placeholder="npub..."></textarea>
-        <button id="npub-submit-input" class="input-button">Search</button>
+    <div class="inside-main-content">
+      <div class="headline">
+        <h1>Profilestr</h1>
+        <p>Enter npub and see notes posted by them on #nostr protocol!</p>
+        <div class="npub-input-container">
+          <textarea id="npub-input" class="input-field" placeholder="npub..."></textarea>
+          <button id="npub-submit-input" class="input-button">Search</button>
+        </div>
+        <div id="profile-pic-container"></div>
       </div>
+      <section id="nostr-notes-container">
+        <!-- notes will be rendered dynamically from js here -->
+      </section>
     </div>
-    <section id="nostr-notes-container">
-      <!-- notes will be rendered dynamically from js here -->
-    </section>
   </main>
 </body>
 </html>

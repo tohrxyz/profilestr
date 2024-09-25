@@ -14,12 +14,20 @@ body {
   display: grid;
   grid-auto-flow: column;
   height: 100%;
+  max-height: 100vh;
 }
 
 main {
   display: grid;
   justify-content: center;
-  align-content: center;
+  /* align-content: center; */
   height: 100%;
   width: 100%;
+}
+
+.inside-main-content {
+  display: flex;
+  flex-direction: column;
+  width: 60vw;
+  max-width: 800px;
 }
