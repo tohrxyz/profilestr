@@ -18,9 +18,15 @@ const newNoteEvent = new CustomEvent("newNoteEvent", { detail: { message: "New e
 document.addEventListener('DOMContentLoaded', async () => {
   nostr = window.NostrTools
   console.log({nostr})
-  
+
   relay = await nostr.Relay.connect(relayUrl)
   console.log(`Connected to ${relay.url}`, {relay})
+
+  const hash = window.location.hash
+  console.log(hash)
+  if (hash.startsWith("#npub")) {
+    submitNpub(hash.slice(1))
+  }
 
   const btn = document.getElementById("npub-submit-input")
   btn.addEventListener('click', submitNpub)
@@ -70,15 +76,21 @@ window.addEventListener('newNoteEvent', (event) => {
   }
 })
 
-function submitNpub() {
+function submitNpub(npubIn) {
   events = []
   if (notesContainer) {
     while(notesContainer.firstChild) {
       notesContainer.removeChild(notesContainer.lastChild)
     }
   }
+  let npub;
   const input = document.getElementById("npub-input")
-  const npub = input.value
+  if (npubIn) {
+    npub = npubIn
+    input.textContent = npubIn
+  } else {
+    npub = input.value
+  }
   const hexPubKey = nostr.nip19.decode(npub).data
   relay.subscribe([
     {
