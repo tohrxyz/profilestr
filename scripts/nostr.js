@@ -1,3 +1,4 @@
+const { clearProfile, clearNotes, renderProfile, renderNotes } = require("./utils")
 const relayUrl = "wss://relay.damus.io"
 let relay;
 let events = [];
@@ -32,51 +33,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 window.addEventListener('newNoteEvent', (event) => {
   notesContainer = document.getElementById('nostr-notes-container')
   const latestNote = events.pop()
-  const tags = latestNote.tags
-  
   switch (latestNote.kind) {
     case 0:
-      profileData = {}
-      clearProfile()
-      const profilePicContainer = document.getElementById("profile-pic-container")
-      profileData = JSON.parse(latestNote.content)
-
-      const img = document.createElement('img')
-      img.src = profileData.picture
-      img.classList.add(["profile-pic"])
-
-      const name = document.createElement('h2')
-      name.textContent = profileData.display_name
-      const desc = document.createElement('p')
-      desc.textContent = profileData.about
-      profilePicContainer.appendChild(img)
-      const div = document.createElement('div')
-      div.classList.add(['profile-info-container'])
-      div.appendChild(name)
-      div.appendChild(desc)
-      profilePicContainer.append(div)
+      renderProfile(latestNote)
       break;
       case 1:
-        const text = document.createElement('span');
-        if (tags && tags[1] && tags[1][3] && tags[1][3] === "reply") {
-          const replyNotice = document.createElement('a')
-          const div = document.createElement('div')
-          div.classList.add(['reply-note-container'])
-          replyNotice.textContent = "reply:"
-          text.textContent = latestNote.content
-          div.appendChild(replyNotice)
-          div.appendChild(text)
-          notesContainer.appendChild(div)
-        } else {
-          text.textContent = latestNote.content
-          notesContainer.appendChild(text)
-        }
+        renderNote(latestNote)
       break;
   }
 })
 
 function submitNpub() {
-  events = []
   clearNotes()
   const input = document.getElementById("npub-input")
   const npub = input.value
@@ -95,7 +62,6 @@ function submitNpub() {
 }
 
 function loadNpubFromHash(hash) {
-  events = []
   clearNotes()
   const input = document.getElementById("npub-input")
   const npub = hash;
@@ -112,22 +78,4 @@ function loadNpubFromHash(hash) {
       window.dispatchEvent(newNoteEvent)
     }
   })
-}
-
-function clearProfile() {
-  const profilePicContainer = document.getElementById("profile-pic-container")
-  if (profilePicContainer) {
-    while(profilePicContainer.firstChild) {
-      profilePicContainer.removeChild(profilePicContainer.lastChild)
-    }
-  }
-}
-
-function clearNotes() {
-  const notesContainerLocal = document.getElementById('nostr-notes-container')
-  if (notesContainerLocal) {
-    while(notesContainerLocal.firstChild) {
-      notesContainerLocal.removeChild(notesContainerLocal.lastChild)
-    }
-  }
 }
