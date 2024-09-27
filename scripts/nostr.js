@@ -36,6 +36,8 @@ window.addEventListener('newNoteEvent', (event) => {
   
   switch (latestNote.kind) {
     case 0:
+      profileData = {}
+      clearProfile()
       const profilePicContainer = document.getElementById("profile-pic-container")
       profileData = JSON.parse(latestNote.content)
 
@@ -75,11 +77,7 @@ window.addEventListener('newNoteEvent', (event) => {
 
 function submitNpub() {
   events = []
-  if (notesContainer) {
-    while(notesContainer.firstChild) {
-      notesContainer.removeChild(notesContainer.lastChild)
-    }
-  }
+  clearNotes()
   const input = document.getElementById("npub-input")
   const npub = input.value
   const hexPubKey = nostr.nip19.decode(npub).data
@@ -98,11 +96,7 @@ function submitNpub() {
 
 function loadNpubFromHash(hash) {
   events = []
-  if (notesContainer) {
-    while(notesContainer.firstChild) {
-      notesContainer.removeChild(notesContainer.lastChild)
-    }
-  }
+  clearNotes()
   const input = document.getElementById("npub-input")
   const npub = hash;
   input.textContent = npub;
@@ -118,4 +112,22 @@ function loadNpubFromHash(hash) {
       window.dispatchEvent(newNoteEvent)
     }
   })
+}
+
+function clearProfile() {
+  const profilePicContainer = document.getElementById("profile-pic-container")
+  if (profilePicContainer) {
+    while(profilePicContainer.firstChild) {
+      profilePicContainer.removeChild(profilePicContainer.lastChild)
+    }
+  }
+}
+
+function clearNotes() {
+  const notesContainerLocal = document.getElementById('nostr-notes-container')
+  if (notesContainerLocal) {
+    while(notesContainerLocal.firstChild) {
+      notesContainerLocal.removeChild(notesContainerLocal.lastChild)
+    }
+  }
 }
